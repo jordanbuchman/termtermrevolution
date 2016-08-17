@@ -1,4 +1,4 @@
-# Term Term Revolution!
+# ![TTR logo](https://github.com/jordanbuchman/termtermrevolution/raw/master/logo.png)
 
 Term Term Revolution is a dance arcade game on your terminal.
 
