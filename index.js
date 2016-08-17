@@ -26,6 +26,9 @@ function getDirectories(srcpath) {
 
 if (fs.readdirSync('./song_zips').length > 1) {
   fs.readdirSync('./song_zips').forEach(function(zip_file) {
+    if (zip_file.indexOf(".zip") == -1){
+        return;
+    }
     var zip = new AdmZip('./song_zips/' + zip_file);
     zip.extractAllTo(__dirname + '/songs/', /*overwrite*/ true);
     var zipEntries = zip.getEntries(); // an array of ZipEntry records
