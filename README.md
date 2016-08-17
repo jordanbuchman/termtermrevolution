@@ -6,6 +6,8 @@ Fullscreen is recommended.
 
 **Note: `mplayer` or `mpv` with `libcaca` support is required for video!**
 
+**Note: `imagemagick` or `graphicsmagick` is required!**
+
 ## Instructions
 
 1. Place zip files from [here](https://zenius-i-vanisher.com/v5.2/simfiles.php) (or another simfile archive) into the `song_zips` folder.
