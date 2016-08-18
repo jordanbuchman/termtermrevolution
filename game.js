@@ -104,17 +104,10 @@ var play = function(data_file, audio_file, video_file, image_bg_file) {
     x.hide();
   });
 
-
   left.style.bold = 'true';
   up.style.bold = 'true';
   right.style.bold = 'true';
   down.style.bold = 'true';
-
-  left.style.bold = 'true';
-  up.style.bold = 'true';
-  right.style.bold = 'true';
-  down.style.bold = 'true';
-
 
   function bigTextTicker(text, numchars, speed) {
     var bigbox = blessed.bigtext({
