@@ -117,7 +117,8 @@ var play = function(data_file, audio_file, video_file, image_bg_file) {
 
 
   function bigTextTicker(text, numchars, speed) {
-    var bigbox = grid.set(8, 9, 4, 7, blessed.bigtext, {
+    var bigbox = blessed.bigtext({
+      left: 'center',
       content: text.substring(0, numchars),
       shrink: true,
       border: 'line',
@@ -129,6 +130,8 @@ var play = function(data_file, audio_file, video_file, image_bg_file) {
         bold: false
       }
     });
+    screen.append(bigbox);
+    bigbox.abottom = '100%+' + bigbox.height;
 
     var begin = 0;
     var end = numchars;
