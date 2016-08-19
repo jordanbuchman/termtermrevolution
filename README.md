@@ -4,7 +4,7 @@ Term Term Revolution is a dance arcade game on your terminal.
 
 Fullscreen is recommended.
 
-**Note: `mplayer` or `mpv` with `libcaca` support is required for video!**
+**Note: `mplayer` or `mpv` with `libcaca` support is required!**
 
 **Note: `imagemagick` or `graphicsmagick` is required!**
 
@@ -17,9 +17,9 @@ Fullscreen is recommended.
 ## Controls
 
 ### Menu
-Left and right arrow keys to move between songs.
+Arrow keys to navigate.
 
-Enter to select a song.
+Enter to select.
 
 ### Game
-Arrow keys to activate associated button.
+Press key to activate associated button.
