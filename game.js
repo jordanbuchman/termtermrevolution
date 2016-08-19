@@ -78,7 +78,7 @@ class Player {
       var steps = note.steps.split('');
       var realsteps = [];
       for (var i = 0; i < 4; i++) {
-        if (steps[i] == '1') {
+        if (steps[i] != '0') {
           realsteps.push(that.directions[i]);
         }
       }
