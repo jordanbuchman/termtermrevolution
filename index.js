@@ -46,8 +46,8 @@ if (fs.readdirSync('./song_zips').length > 1) {
         zip.extractEntryTo(zipEntry.entryName, './songs/' + dir_name, false, true);
       }
     });
-    child_process.execSync('convert -colors 256 -depth 8 +dither png8:./songs/' + dir_name + '/' + dir_name + '.png png8:./songs/' + dir_name + '/' + dir_name + '.png');
-    child_process.execSync('convert -colors 256 -depth 8 +dither png8:./songs/' + dir_name + '/' + dir_name + '-bg.png png8:./songs/' + dir_name + '/' + dir_name + '-bg.png');
+    child_process.execSync('convert -colors 256 -depth 8 +dither png8:./songs/' + dir_name.replace(/ /g,'\\ ') + '/' + dir_name.replace(/ /g,'\\ ') + '.png png8:./songs/' + dir_name.replace(/ /g,'\\ ') + '/' + dir_name.replace(/ /g,'\\ ') + '.png');
+    child_process.execSync('convert -colors 256 -depth 8 +dither png8:./songs/' + dir_name.replace(/ /g,'\\ ') + '/' + dir_name.replace(/ /g,'\\ ') + '-bg.png png8:./songs/' + dir_name.replace(/ /g,'\\ ') + '/' + dir_name.replace(/ /g,'\\ ') + '-bg.png');
     //child_process.execSync('node parser.js ' + __dirname + '/songs/' + dir_name + '/' + dir_name + '.sm');
     sm_parser.convert(__dirname + '/songs/' + dir_name + '/' + dir_name + '.sm');
     fs.unlink('./song_zips/' + zip_file, function(err) {});
@@ -58,7 +58,15 @@ var songs = getDirectories('./songs');
 
 var song_index = 0;
 
-var music = player.play('./songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg', function(err) {});
+var music;
+fs.stat(__dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg', function(err) {
+  if(err){
+    music = player.play('./songs/' + songs[song_index] + '/' + songs[song_index] + '.mp3', function(err) {})
+  }
+  else{
+    music = player.play('./songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg', function(err) {})
+  }
+});
 
 var image = blessed.ansiimage({
   parent: screen,
@@ -100,7 +108,14 @@ screen.key(['left', 'right'], function(ch, key) {
   image.destroy();
   image_left.destroy();
   image_right.destroy();
-  music = player.play('./songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg', function(err) {});
+  fs.stat(__dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg', function(err) {
+    if(err){
+      music = player.play('./songs/' + songs[song_index] + '/' + songs[song_index] + '.mp3', function(err) {})
+    }
+    else{
+      music = player.play('./songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg', function(err) {})
+    }
+  });
 
   image = blessed.ansiimage({
     parent: screen,
@@ -178,19 +193,43 @@ screen.key(['enter'], function(ch, key) {
   function start(mode) {
     fs.stat(__dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.avi', function(err) {
       if (err) {
-        game.play(
-          data_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.json',
-          audio_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg',
-          bg_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '-bg.png',
-          mode = mode
-        );
+        fs.stat(__dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg', function(err) {
+          if(err){
+            game.play(
+              data_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.json',
+              audio_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.mp3',
+              bg_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '-bg.png',
+              mode = mode
+            );
+          }
+          else {
+            game.play(
+              data_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.json',
+              audio_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg',
+              bg_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '-bg.png',
+              mode = mode
+            );
+          }
+        });
       } else {
-        game.play(
-          data_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.json',
-          audio_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg',
-          bg_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.avi',
-          mode = mode
-        );
+          fs.stat(__dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg', function(err) {
+            if(err){
+              game.play(
+                data_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.json',
+                audio_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.mp3',
+                bg_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.avi',
+                mode = mode
+              );
+            }
+            else {
+              game.play(
+                data_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.json',
+                audio_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg',
+                bg_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.avi',
+                mode = mode
+              );
+            }
+          });
       }
       image.destroy();
       image_left.destroy();

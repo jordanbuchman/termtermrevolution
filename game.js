@@ -265,17 +265,29 @@ var play = function(data_file, audio_file, bg_file, mode) {
     );
   }
 
-  if (bg_file == bg_file) {
-    var video = blessed.video({
+  if (bg_file.indexOf('.avi') != -1) {
+    var bg = blessed.video({
       parent: screen,
-      left: 0,
-      top: 0,
+      left: 'center',
+      top: 'center',
       file: bg_file,
-      width: 'shrink',
-      height: 'shrink'
+      width: '100%',
+      height: '100%'
     });
-    video.setBack();
   }
+  else{
+    var bg = blessed.ansiimage({
+      parent: screen,
+      left: 'center',
+      top: 'center',
+      file: bg_file,
+      width: '100%',
+      height: '100%',
+      ascii: true
+    });
+  }
+  bg.setBack();
+
 
   // Render the screen.
   screen.render();
