@@ -13,9 +13,15 @@ Array.prototype.diff = function(a) {
   });
 };
 
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
+
 var screen = blessed.screen({
-  smartCSR: true
+  smartCSR: true,
+  debug: true
 });
+
 
 function getDirectories(srcpath) {
   return fs.readdirSync(srcpath).filter(function(file) {
@@ -26,8 +32,8 @@ function getDirectories(srcpath) {
 
 if (fs.readdirSync('./song_zips').length > 1) {
   fs.readdirSync('./song_zips').forEach(function(zip_file) {
-    if (zip_file.indexOf(".zip") == -1){
-        return;
+    if (zip_file.indexOf(".zip") == -1) {
+      return;
     }
     var zip = new AdmZip('./song_zips/' + zip_file);
     zip.extractAllTo(__dirname + '/songs/', /*overwrite*/ true);
@@ -122,18 +128,77 @@ screen.key(['left', 'right'], function(ch, key) {
 });
 
 screen.key(['enter'], function(ch, key) {
-  fs.stat(__dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.avi', function(err) {
-    if (err) {
-      game.play(data_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.json', audio_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg', image_bg_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '-bg.png');
-    } else {
-      game.play(data_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.json', audio_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg', video_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.avi', image_bg_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '-bg.png');
-    }
-    image.destroy();
-    image_left.destroy();
-    image_right.destroy();
-    music.kill();
-    screen.destroy();
+  var song = require('./songs/' + songs[song_index] + '/' + songs[song_index] + '.json');
+  var modes = song.notes.map(function(x) {
+    return x.mode
+  }).filter(onlyUnique)
+  var list = blessed.list({
+    parent: screen,
+    keys: true,
+    left: 'center',
+    top: 'center',
+    height: '20%',
+    align: 'center',
+    width: '40%',
+    bg: 'green',
+    items: modes,
+    interactive: true,
   });
+  list.focus();
+  screen.render();
+  list.on('select', function(item, selected) {
+    this.destroy();
+    var difficulties = song.notes.filter(function(x) {
+      return x.mode === modes[selected]
+    }).map(function(x) {
+      return x.difficulty
+    });
+    var list = blessed.list({
+      parent: screen,
+      keys: true,
+      left: 'center',
+      top: 'center',
+      height: '20%',
+      align: 'center',
+      width: '40%',
+      bg: 'green',
+      items: difficulties,
+      interactive: true,
+    });
+    list.focus();
+    screen.render();
+    list.on('select', function(item, selected2) {
+      var chosen = song.notes.filter(function(x) {
+        return x.mode === modes[selected] && x.difficulty === difficulties[selected2]
+      })[0];
+      start(song.notes.indexOf(chosen));
+    })
+  })
+
+  function start(mode) {
+    fs.stat(__dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.avi', function(err) {
+      if (err) {
+        game.play(
+          data_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.json',
+          audio_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg',
+          bg_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '-bg.png',
+          mode = mode
+        );
+      } else {
+        game.play(
+          data_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.json',
+          audio_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.ogg',
+          bg_file = __dirname + '/songs/' + songs[song_index] + '/' + songs[song_index] + '.avi',
+          mode = mode
+        );
+      }
+      image.destroy();
+      image_left.destroy();
+      image_right.destroy();
+      music.kill();
+      screen.destroy();
+    });
+  }
 });
 
 screen.key(['escape', 'q', 'C-c'], function(ch, key) {
