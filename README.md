@@ -8,6 +8,8 @@ Fullscreen is recommended.
 
 **Note: `imagemagick` or `graphicsmagick` is required!**
 
+**Note: Only `dance-single` and `dance-double` modes are currently working.**
+
 ## Instructions
 1. Run `npm install` to install dependencies.
 2. Install `mplayer` and `imagemagick` if not already installed.
