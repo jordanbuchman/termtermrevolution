@@ -9,10 +9,11 @@ Fullscreen is recommended.
 **Note: `imagemagick` or `graphicsmagick` is required!**
 
 ## Instructions
-
-1. Place zip files from [here](https://zenius-i-vanisher.com/v5.2/simfiles.php) (or another simfile archive) into the `song_zips` folder.
-2. Run `node index.js`.
-3. If the simfile has an associated video which isn't in the zip archive, go into the `songs` directory and place the video manually in the appropriate folder (after running `index.js` to create the folder).
+1. Run `npm install` to install dependencies.
+2. Install `mplayer` and `imagemagick` if not already installed.
+3. Place zip files from [here](https://zenius-i-vanisher.com/v5.2/simfiles.php) (or another simfile archive) into the `song_zips` folder.
+4. Run `node index.js`.
+5. If the simfile has an associated video which isn't in the zip archive, go into the `songs` directory and place the video manually in the appropriate folder (after running `index.js` to create the folder).
 
 ## Controls
 
